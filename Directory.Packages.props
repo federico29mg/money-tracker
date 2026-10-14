@@ -1,0 +1,13 @@
+<Project>
+
+  <!-- Central Package Management: NuGet versions are declared once here.
+       Projects reference packages without a version: <PackageReference Include="Name" /> -->
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Package versions will be added here as projects need them. -->
+  </ItemGroup>
+
+</Project>
