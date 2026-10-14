@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <!-- Package versions will be added here as projects need them. -->
+    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.13"/>
   </ItemGroup>
 
 </Project>
