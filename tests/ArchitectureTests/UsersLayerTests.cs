@@ -69,6 +69,17 @@ public class UsersLayerTests
 
         rule.Check(UsersArchitecture);
     }
+    
+    [Fact]
+    public void Application_ShouldNotDependOn_EntityFrameworkCore()
+    {
+        IArchRule rule = Types().That().Are(ApplicationLayer)
+            .Should().NotDependOnAnyTypesThat()
+            .ResideInNamespaceMatching(@"^Microsoft\.EntityFrameworkCore(\..*)?$")
+            .Because("use cases reach the database only through ports such as IUserRepository and IUnitOfWork");
+
+        rule.Check(UsersArchitecture);
+    }
 
     [Fact]
     public void Infrastructure_ShouldNotDependOn_Api()
