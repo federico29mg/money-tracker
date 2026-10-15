@@ -1,6 +1,6 @@
 ﻿namespace Users.Infrastructure;
 
-public class AssemblyReference
+public static class AssemblyReference
 {
     
 }

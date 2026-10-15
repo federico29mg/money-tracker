@@ -1,6 +1,6 @@
 ﻿namespace Users.Application;
 
-public class AssemblyReference
+public static class AssemblyReference
 {
     
 }
