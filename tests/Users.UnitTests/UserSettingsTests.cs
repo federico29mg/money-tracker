@@ -5,11 +5,9 @@ namespace Users.UnitTests;
 public class UserSettingsTests
 {
     [Fact]
-    public void Create_SameCurrency_ReturnsEqualSettings()
-    {
+    public void Create_SameCurrency_ReturnsEqualSettings() =>
         Assert.Equal(UserSettings.Create(Currency.Usd), UserSettings.Create(Currency.Usd));
-    }
-    
+
     [Fact]
     public void WithDefaultCurrency_NewCurrency_ReturnsNewSettingsAndKeepsOriginal()
     {

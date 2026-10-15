@@ -1,14 +1,14 @@
 <Solution>
-  <Folder Name="/src/" />
-  <Folder Name="/src/Services/" />
+  <Folder Name="/src/"/>
+  <Folder Name="/src/Services/"/>
   <Folder Name="/src/Services/Users/">
-    <Project Path="src/Services/Users/Users.Api/Users.Api.csproj" />
-    <Project Path="src/Services/Users/Users.Application/Users.Application.csproj" />
-    <Project Path="src/Services/Users/Users.Domain/Users.Domain.csproj" />
-    <Project Path="src/Services/Users/Users.Infrastructure/Users.Infrastructure.csproj" />
+    <Project Path="src/Services/Users/Users.Api/Users.Api.csproj"/>
+    <Project Path="src/Services/Users/Users.Application/Users.Application.csproj"/>
+    <Project Path="src/Services/Users/Users.Domain/Users.Domain.csproj"/>
+    <Project Path="src/Services/Users/Users.Infrastructure/Users.Infrastructure.csproj"/>
   </Folder>
   <Folder Name="/tests/">
-    <Project Path="tests/ArchitectureTests/ArchitectureTests.csproj" />
-    <Project Path="tests/Users.UnitTests/Users.UnitTests.csproj" />
+    <Project Path="tests/ArchitectureTests/ArchitectureTests.csproj"/>
+    <Project Path="tests/Users.UnitTests/Users.UnitTests.csproj"/>
   </Folder>
 </Solution>

@@ -4,6 +4,7 @@ using ArchUnitNET.Loader;
 using ArchUnitNET.xUnitV3;
 
 using static ArchUnitNET.Fluent.ArchRuleDefinition;
+
 using ApiAssembly = Users.Api.AssemblyReference;
 using ApplicationAssembly = Users.Application.AssemblyReference;
 using DomainAssembly = Users.Domain.AssemblyReference;
@@ -51,7 +52,8 @@ public class UsersLayerTests
         IArchRule rule = Types().That().Are(DomainLayer)
             .Should().NotDependOnAnyTypesThat()
             .ResideInNamespaceMatching(@"^Microsoft\.(EntityFrameworkCore|AspNetCore)(\..*)?$")
-            .Because("business rules must be testable without a database or web server and must survive a change of framework");
+            .Because(
+                "business rules must be testable without a database or web server and must survive a change of framework");
 
         rule.Check(UsersArchitecture);
     }
@@ -62,17 +64,19 @@ public class UsersLayerTests
         IArchRule rule = Types().That().Are(ApplicationLayer)
             .Should().NotDependOnAny(InfrastructureLayer)
             .AndShould().NotDependOnAny(ApiLayer)
-            .Because("use cases depend on abstractions they define, which Infrastructure implements (Dependency Inversion Principle)");
+            .Because(
+                "use cases depend on abstractions they define, which Infrastructure implements (Dependency Inversion Principle)");
 
         rule.Check(UsersArchitecture);
     }
-    
+
     [Fact]
     public void Infrastructure_ShouldNotDependOn_Api()
     {
         IArchRule rule = Types().That().Are(InfrastructureLayer)
             .Should().NotDependOnAny(ApiLayer)
-            .Because("Api is the composition root; Infrastructure implements Application's abstractions and must not know how the service is hosted or exposed");
+            .Because(
+                "Api is the composition root; Infrastructure implements Application's abstractions and must not know how the service is hosted or exposed");
 
         rule.Check(UsersArchitecture);
     }

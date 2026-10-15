@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-    </PropertyGroup>
+  <PropertyGroup>
+  </PropertyGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\Users.Domain\Users.Domain.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Users.Domain\Users.Domain.csproj"/>
+  </ItemGroup>
 
 </Project>

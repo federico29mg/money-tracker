@@ -31,10 +31,8 @@ public class UserTests
     [Theory]
     [InlineData("")]
     [InlineData("   ")]
-    public void Register_MissingDisplayName_ThrowsDomainException(string displayName)
-    {
+    public void Register_MissingDisplayName_ThrowsDomainException(string displayName) =>
         Assert.Throws<DomainException>(() => CreateUser(displayName));
-    }
 
     [Fact]
     public void Register_TooLongDisplayName_ThrowsDomainException()
@@ -43,7 +41,7 @@ public class UserTests
 
         Assert.Throws<DomainException>(() => CreateUser(tooLong));
     }
-    
+
     [Fact]
     public void Register_MaxLengthDisplayName_CreatesUser()
     {
@@ -53,7 +51,7 @@ public class UserTests
 
         Assert.Equal(maxLengthName, user.DisplayName);
     }
-    
+
     [Fact]
     public void Register_MaxLengthDisplayNameWithSpaces_TrimsAndCreatesUser()
     {
@@ -65,10 +63,8 @@ public class UserTests
     }
 
     [Fact]
-    public void Register_DefaultId_ThrowsDomainException()
-    {
+    public void Register_DefaultId_ThrowsDomainException() =>
         Assert.Throws<DomainException>(() => User.Register(default, "Ana", UserSettings.Default));
-    }
 
     [Fact]
     public void Rename_ValidName_ChangesDisplayName()
@@ -83,7 +79,7 @@ public class UserTests
     [Fact]
     public void Rename_InvalidName_KeepsPreviousDisplayName()
     {
-        var user = CreateUser("Ana");
+        var user = CreateUser();
 
         Assert.Throws<DomainException>(() => user.Rename(" "));
 

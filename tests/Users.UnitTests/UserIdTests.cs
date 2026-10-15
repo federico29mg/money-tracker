@@ -10,22 +10,19 @@ public class UserIdTests
     {
         var first = UserId.New();
         var second = UserId.New();
-        
+
         Assert.NotEqual(Guid.Empty, first.Value);
         Assert.NotEqual(first, second);
     }
 
     [Fact]
-    public void From_EmptyGuid_ThrowsDomainException()
-    {
-        Assert.Throws<DomainException>(() => UserId.From(Guid.Empty));
-    }
-    
+    public void From_EmptyGuid_ThrowsDomainException() => Assert.Throws<DomainException>(() => UserId.From(Guid.Empty));
+
     [Fact]
     public void From_SameGuid_ReturnsEqualIds()
     {
         var guid = Guid.NewGuid();
-        
+
         Assert.Equal(UserId.From(guid), UserId.From(guid));
     }
 }

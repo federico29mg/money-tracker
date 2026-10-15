@@ -12,17 +12,15 @@ public class CurrencyTests
     public void FromCode_SupportedCodeInAnyFormat_ReturnsUsd(string code)
     {
         var currency = Currency.FromCode(code);
-        
+
         Assert.Same(Currency.Usd, currency);
     }
-    
+
     [Theory]
     [InlineData("EUR")]
     [InlineData("")]
     [InlineData("   ")]
     [InlineData(null)]
-    public void FromCode_UnsupportedOrMissingCode_ThrowsDomainException(string? code)
-    {
+    public void FromCode_UnsupportedOrMissingCode_ThrowsDomainException(string? code) =>
         Assert.Throws<DomainException>(() => Currency.FromCode(code));
-    }
 }
