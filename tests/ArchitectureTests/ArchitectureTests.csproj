@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Using Include="Xunit"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="TngTech.ArchUnitNET.xUnitV3" />
+        <PackageReference Include="xunit.v3.mtp-v2"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\Services\Users\Users.Api\Users.Api.csproj" />
+      <ProjectReference Include="..\..\src\Services\Users\Users.Application\Users.Application.csproj" />
+      <ProjectReference Include="..\..\src\Services\Users\Users.Domain\Users.Domain.csproj" />
+      <ProjectReference Include="..\..\src\Services\Users\Users.Infrastructure\Users.Infrastructure.csproj" />
+    </ItemGroup>
+
+</Project>
