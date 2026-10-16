@@ -1,0 +1,12 @@
+﻿# Local development settings. Docker Compose merges this file automatically with docker-compose.yml.
+
+services:
+  sqlserver:
+    ports:
+      - "1433:1433"
+
+  users-api:
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+    ports:
+      - "5100:8080"
