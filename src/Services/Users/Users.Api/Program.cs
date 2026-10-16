@@ -1,3 +1,4 @@
+using Users.Api.ExceptionHandling;
 using Users.Application.DependencyInjection;
 using Users.Infrastructure.DependencyInjection;
 
@@ -10,15 +11,16 @@ builder.Services
     .AddUsersApplication()
     .AddUsersInfrastructure(usersDbConnectionString);
 
-// Add services to the container.
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+app.UseExceptionHandler();
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
