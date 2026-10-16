@@ -1,6 +1,6 @@
 ﻿using Users.Domain.Common;
 
-namespace Users.Domain;
+namespace Users.Domain.UserAggregate;
 
 public sealed class User
 {

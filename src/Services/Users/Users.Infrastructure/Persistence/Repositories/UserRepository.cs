@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
 using Users.Application.Abstractions;
-using Users.Domain;
+using Users.Domain.UserAggregate;
 
 namespace Users.Infrastructure.Persistence.Repositories;
 

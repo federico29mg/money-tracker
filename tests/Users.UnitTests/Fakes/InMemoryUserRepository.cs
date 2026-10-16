@@ -1,5 +1,5 @@
 ﻿using Users.Application.Abstractions;
-using Users.Domain;
+using Users.Domain.UserAggregate;
 
 namespace Users.UnitTests.Fakes;
 

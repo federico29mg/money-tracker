@@ -1,6 +1,7 @@
 ﻿using Users.Application.Abstractions;
 using Users.Application.Common;
-using Users.Domain;
+using Users.Domain.Common;
+using Users.Domain.UserAggregate;
 
 namespace Users.Application.Features.ChangeDefaultCurrency;
 

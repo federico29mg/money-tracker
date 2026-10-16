@@ -1,4 +1,4 @@
-﻿using Users.Domain;
+﻿using Users.Domain.UserAggregate;
 
 namespace Users.Application.Abstractions;
 

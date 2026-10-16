@@ -1,5 +1,6 @@
 ﻿using Users.Application.Abstractions;
-using Users.Domain;
+using Users.Domain.Common;
+using Users.Domain.UserAggregate;
 
 namespace Users.Application.Features.RegisterUser;
 

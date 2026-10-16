@@ -1,6 +1,4 @@
-﻿using Users.Domain.Common;
-
-namespace Users.Domain;
+﻿namespace Users.Domain.Common;
 
 public sealed record Currency
 {

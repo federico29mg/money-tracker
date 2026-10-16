@@ -1,4 +1,6 @@
-﻿namespace Users.Domain;
+﻿using Users.Domain.Common;
+
+namespace Users.Domain.UserAggregate;
 
 public sealed record UserSettings
 {

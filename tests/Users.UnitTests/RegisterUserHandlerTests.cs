@@ -1,6 +1,6 @@
 ﻿using Users.Application.Features.RegisterUser;
-using Users.Domain;
 using Users.Domain.Common;
+using Users.Domain.UserAggregate;
 using Users.UnitTests.Fakes;
 
 namespace Users.UnitTests;

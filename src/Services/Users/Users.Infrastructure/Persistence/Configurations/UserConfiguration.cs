@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-using Users.Domain;
+using Users.Domain.Common;
+using Users.Domain.UserAggregate;
 
 namespace Users.Infrastructure.Persistence.Configurations;
 
