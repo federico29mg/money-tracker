@@ -13,6 +13,14 @@ public sealed class User
         Settings = settings;
     }
 
+    // Used by EF Core when loading: it can't pass complex types to constructors and sets Settings itself.
+    private User(UserId id, string displayName)
+    {
+        Id = id;
+        DisplayName = displayName;
+        Settings = null!;
+    }
+
     public UserId Id { get; }
     public string DisplayName { get; private set; }
     public UserSettings Settings { get; private set; }
