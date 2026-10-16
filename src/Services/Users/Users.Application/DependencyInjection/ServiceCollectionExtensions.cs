@@ -13,7 +13,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<RegisterUserHandler>();
         services.AddScoped<GetUserHandler>();
         services.AddScoped<ChangeDefaultCurrencyHandler>();
-        
+
         return services;
     }
 }

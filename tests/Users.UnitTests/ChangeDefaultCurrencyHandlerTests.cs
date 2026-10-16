@@ -7,9 +7,9 @@ namespace Users.UnitTests;
 
 public class ChangeDefaultCurrencyHandlerTests
 {
+    private readonly ChangeDefaultCurrencyHandler _handler;
     private readonly InMemoryUserRepository _repository = new();
     private readonly FakeUnitOfWork _unitOfWork = new();
-    private readonly ChangeDefaultCurrencyHandler _handler;
 
     public ChangeDefaultCurrencyHandlerTests() =>
         _handler = new ChangeDefaultCurrencyHandler(_repository, _unitOfWork);
@@ -32,8 +32,8 @@ public class ChangeDefaultCurrencyHandlerTests
     {
         var command = new ChangeDefaultCurrencyCommand(Guid.NewGuid(), "USD");
 
-        await Assert.ThrowsAsync<NotFoundException>(
-            () => _handler.HandleAsync(command, TestContext.Current.CancellationToken));
+        await Assert.ThrowsAsync<NotFoundException>(() =>
+            _handler.HandleAsync(command, TestContext.Current.CancellationToken));
 
         Assert.Equal(0, _unitOfWork.SaveChangesCallCount);
     }

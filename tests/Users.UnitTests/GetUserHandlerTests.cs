@@ -7,8 +7,8 @@ namespace Users.UnitTests;
 
 public class GetUserHandlerTests
 {
-    private readonly InMemoryUserRepository _repository = new();
     private readonly GetUserHandler _handler;
+    private readonly InMemoryUserRepository _repository = new();
 
     public GetUserHandlerTests() => _handler = new GetUserHandler(_repository);
 
@@ -29,7 +29,7 @@ public class GetUserHandlerTests
     {
         var query = new GetUserQuery(Guid.NewGuid());
 
-        await Assert.ThrowsAsync<NotFoundException>(
-            () => _handler.HandleAsync(query, TestContext.Current.CancellationToken));
+        await Assert.ThrowsAsync<NotFoundException>(() =>
+            _handler.HandleAsync(query, TestContext.Current.CancellationToken));
     }
 }

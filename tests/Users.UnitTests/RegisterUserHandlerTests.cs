@@ -7,9 +7,9 @@ namespace Users.UnitTests;
 
 public class RegisterUserHandlerTests
 {
+    private readonly RegisterUserHandler _handler;
     private readonly InMemoryUserRepository _repository = new();
     private readonly FakeUnitOfWork _unitOfWork = new();
-    private readonly RegisterUserHandler _handler;
 
     public RegisterUserHandlerTests() => _handler = new RegisterUserHandler(_repository, _unitOfWork);
 
@@ -62,8 +62,8 @@ public class RegisterUserHandlerTests
     {
         var command = new RegisterUserCommand("Ana", "EUR");
 
-        await Assert.ThrowsAsync<DomainException>(
-            () => _handler.HandleAsync(command, TestContext.Current.CancellationToken));
+        await Assert.ThrowsAsync<DomainException>(() =>
+            _handler.HandleAsync(command, TestContext.Current.CancellationToken));
 
         Assert.Empty(_repository.StoredUsers);
         Assert.Equal(0, _unitOfWork.SaveChangesCallCount);

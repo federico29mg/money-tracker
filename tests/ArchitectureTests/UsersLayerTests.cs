@@ -69,7 +69,7 @@ public class UsersLayerTests
 
         rule.Check(UsersArchitecture);
     }
-    
+
     [Fact]
     public void Application_ShouldNotDependOn_EntityFrameworkCore()
     {
