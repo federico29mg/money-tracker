@@ -29,15 +29,15 @@ internal sealed class GlobalExceptionHandler(
 
         httpContext.Response.StatusCode = statusCode;
 
-        return await problemDetailsService.TryWriteAsync(new ProblemDetailsContext()
+        return await problemDetailsService.TryWriteAsync(new ProblemDetailsContext
         {
             HttpContext = httpContext,
             Exception = exception,
-            ProblemDetails = new ProblemDetails()
+            ProblemDetails = new ProblemDetails
             {
                 Status = statusCode,
                 Title = title,
-                Detail = statusCode == StatusCodes.Status500InternalServerError ? null : exception.Message,
+                Detail = statusCode == StatusCodes.Status500InternalServerError ? null : exception.Message
             }
         });
     }

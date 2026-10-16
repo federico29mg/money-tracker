@@ -20,9 +20,9 @@ public sealed class UsersController : ControllerBase
         CancellationToken cancellationToken)
     {
         var command = new RegisterUserCommand(request.DisplayName, request.DefaultCurrencyCode);
-        
+
         var userId = await handler.HandleAsync(command, cancellationToken);
-        
+
         return CreatedAtAction(nameof(GetById), new { id = userId }, new RegisterUserResponse(userId));
     }
 
@@ -32,10 +32,8 @@ public sealed class UsersController : ControllerBase
     public async Task<ActionResult<UserResponse>> GetById(
         Guid id,
         [FromServices] GetUserHandler handler,
-        CancellationToken cancellationToken)
-    {
-        return await handler.HandleAsync(new GetUserQuery(id), cancellationToken);
-    }
+        CancellationToken cancellationToken) =>
+        await handler.HandleAsync(new GetUserQuery(id), cancellationToken);
 
     [HttpPut("{id:guid}/default-currency")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
