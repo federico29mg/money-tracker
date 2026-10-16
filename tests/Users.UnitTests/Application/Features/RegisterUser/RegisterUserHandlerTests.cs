@@ -3,7 +3,7 @@ using Users.Domain.Common;
 using Users.Domain.UserAggregate;
 using Users.UnitTests.Fakes;
 
-namespace Users.UnitTests;
+namespace Users.UnitTests.Application.Features.RegisterUser;
 
 public class RegisterUserHandlerTests
 {

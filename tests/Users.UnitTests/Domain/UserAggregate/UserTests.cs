@@ -1,7 +1,7 @@
 ﻿using Users.Domain.Common;
 using Users.Domain.UserAggregate;
 
-namespace Users.UnitTests;
+namespace Users.UnitTests.Domain.UserAggregate;
 
 public class UserTests
 {

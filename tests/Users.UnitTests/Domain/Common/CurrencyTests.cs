@@ -1,6 +1,6 @@
 ﻿using Users.Domain.Common;
 
-namespace Users.UnitTests;
+namespace Users.UnitTests.Domain.Common;
 
 public class CurrencyTests
 {
