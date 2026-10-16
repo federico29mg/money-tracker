@@ -1,3 +1,5 @@
+using Scalar.AspNetCore;
+
 using Users.Api.ExceptionHandling;
 using Users.Application.DependencyInjection;
 using Users.Infrastructure.DependencyInjection;
@@ -24,9 +26,8 @@ app.UseExceptionHandler();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference();
 }
-
-app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
