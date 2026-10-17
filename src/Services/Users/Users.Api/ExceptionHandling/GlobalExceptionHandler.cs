@@ -15,30 +15,38 @@ internal sealed class GlobalExceptionHandler(
         Exception exception,
         CancellationToken cancellationToken)
     {
-        var (statusCode, title) = exception switch
-        {
-            DomainException => (StatusCodes.Status400BadRequest, "Invalid request"),
-            NotFoundException => (StatusCodes.Status404NotFound, "Resource not found"),
-            _ => (StatusCodes.Status500InternalServerError, "An unexpected error occurred")
-        };
+        var problemDetails = CreateProblemDetails(exception);
 
-        if (statusCode == StatusCodes.Status500InternalServerError)
+        if (problemDetails.Status == StatusCodes.Status500InternalServerError)
         {
             logger.LogError(exception, "Unhandled exception while processing {Path}", httpContext.Request.Path);
         }
 
-        httpContext.Response.StatusCode = statusCode;
+        httpContext.Response.StatusCode = problemDetails.Status ?? StatusCodes.Status500InternalServerError;
 
         return await problemDetailsService.TryWriteAsync(new ProblemDetailsContext
         {
             HttpContext = httpContext,
             Exception = exception,
-            ProblemDetails = new ProblemDetails
-            {
-                Status = statusCode,
-                Title = title,
-                Detail = statusCode == StatusCodes.Status500InternalServerError ? null : exception.Message
-            }
+            ProblemDetails = problemDetails
         });
     }
+
+    private static ProblemDetails CreateProblemDetails(Exception exception) => exception switch
+    {
+        ValidationException validation => new HttpValidationProblemDetails(
+            new Dictionary<string, string[]>(validation.Errors))
+        {
+            Status = StatusCodes.Status400BadRequest,
+            Title = "Invalid request"
+        },
+        DomainException => Problem(StatusCodes.Status400BadRequest, "Invalid request", exception.Message),
+        InvalidCredentialsException => Problem(StatusCodes.Status401Unauthorized, "Authentication failed", exception.Message),
+        NotFoundException => Problem(StatusCodes.Status404NotFound, "Resource not found", exception.Message),
+        ConflictException => Problem(StatusCodes.Status409Conflict, "Conflict", exception.Message),
+        _ => Problem(StatusCodes.Status500InternalServerError, "An unexpected error occurred", detail: null)
+    };
+
+    private static ProblemDetails Problem(int status, string title, string? detail) =>
+        new() { Status = status, Title = title, Detail = detail };
 }

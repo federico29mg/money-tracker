@@ -4,7 +4,10 @@ using Users.Domain.UserAggregate;
 
 namespace Users.Application.Features.RegisterUser;
 
-public sealed class RegisterUserHandler(IUserRepository userRepository, IUnitOfWork unitOfWork)
+public sealed class RegisterUserHandler(
+    IUserRepository userRepository,
+    IIdentityService identityService,
+    IUnitOfWork unitOfWork)
 {
     public async Task<Guid> HandleAsync(RegisterUserCommand command, CancellationToken cancellationToken)
     {
@@ -16,8 +19,13 @@ public sealed class RegisterUserHandler(IUserRepository userRepository, IUnitOfW
 
         var user = User.Register(UserId.New(), command.DisplayName, settings);
 
-        userRepository.Add(user);
-        await unitOfWork.SaveChangesAsync(cancellationToken);
+        await unitOfWork.ExecuteInTransactionAsync(async token =>
+        {
+            await identityService.CreateUserAsync(user.Id, command.Email, command.Password, token);
+
+            userRepository.Add(user);
+            await unitOfWork.SaveChangesAsync(token);
+        }, cancellationToken);
 
         return user.Id.Value;
     }

@@ -2,6 +2,7 @@
 
 using Users.Application.Features.ChangeDefaultCurrency;
 using Users.Application.Features.GetUser;
+using Users.Application.Features.Login;
 using Users.Application.Features.RegisterUser;
 
 namespace Users.Application.DependencyInjection;
@@ -13,6 +14,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<RegisterUserHandler>();
         services.AddScoped<GetUserHandler>();
         services.AddScoped<ChangeDefaultCurrencyHandler>();
+        services.AddScoped<LoginHandler>();
 
         return services;
     }
