@@ -21,6 +21,7 @@ services:
       dockerfile: src/Services/Users/Dockerfile
     environment:
       ConnectionStrings__UsersDb: "Server=sqlserver,1433;Database=UsersDb;User Id=sa;Password=${MSSQL_SA_PASSWORD};TrustServerCertificate=True"
+      Jwt__SigningKey: ${JWT_SIGNING_KEY:?Set JWT_SIGNING_KEY in the .env file}
     depends_on:
       sqlserver:
         condition: service_healthy
