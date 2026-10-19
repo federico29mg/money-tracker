@@ -18,6 +18,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Services\Transactions\Transactions.Api\Transactions.Api.csproj"/>
+    <ProjectReference Include="..\..\src\Services\Transactions\Transactions.Application\Transactions.Application.csproj"/>
+    <ProjectReference Include="..\..\src\Services\Transactions\Transactions.Domain\Transactions.Domain.csproj"/>
+    <ProjectReference Include="..\..\src\Services\Transactions\Transactions.Infrastructure\Transactions.Infrastructure.csproj"/>
     <ProjectReference Include="..\..\src\Services\Users\Users.Api\Users.Api.csproj"/>
     <ProjectReference Include="..\..\src\Services\Users\Users.Application\Users.Application.csproj"/>
     <ProjectReference Include="..\..\src\Services\Users\Users.Domain\Users.Domain.csproj"/>
