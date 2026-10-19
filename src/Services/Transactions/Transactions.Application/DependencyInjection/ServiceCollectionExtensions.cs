@@ -10,6 +10,9 @@ using Transactions.Application.Features.Categories.CreateCategory;
 using Transactions.Application.Features.Categories.GetCategories;
 using Transactions.Application.Features.Categories.GetCategory;
 using Transactions.Application.Features.Categories.RenameCategory;
+using Transactions.Application.Features.Transactions.GetTransaction;
+using Transactions.Application.Features.Transactions.GetTransactions;
+using Transactions.Application.Features.Transactions.RecordTransaction;
 
 namespace Transactions.Application.DependencyInjection;
 
@@ -27,6 +30,9 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ArchiveCategoryHandler>();
         services.AddScoped<GetCategoryHandler>();
         services.AddScoped<GetCategoriesHandler>();
+        services.AddScoped<RecordTransactionHandler>();
+        services.AddScoped<GetTransactionHandler>();
+        services.AddScoped<GetTransactionsHandler>();
 
         return services;
     }
