@@ -1,6 +1,12 @@
 <Solution>
   <Folder Name="/src/"/>
   <Folder Name="/src/Services/"/>
+  <Folder Name="/src/Services/Transactions/">
+    <Project Path="src/Services/Transactions/Transactions.Api/Transactions.Api.csproj"/>
+    <Project Path="src/Services/Transactions/Transactions.Application/Transactions.Application.csproj"/>
+    <Project Path="src/Services/Transactions/Transactions.Domain/Transactions.Domain.csproj"/>
+    <Project Path="src/Services/Transactions/Transactions.Infrastructure/Transactions.Infrastructure.csproj"/>
+  </Folder>
   <Folder Name="/src/Services/Users/">
     <Project Path="src/Services/Users/Users.Api/Users.Api.csproj"/>
     <Project Path="src/Services/Users/Users.Application/Users.Application.csproj"/>
@@ -9,6 +15,7 @@
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/ArchitectureTests/ArchitectureTests.csproj"/>
+    <Project Path="tests/Transactions.UnitTests/Transactions.UnitTests.csproj"/>
     <Project Path="tests/Users.UnitTests/Users.UnitTests.csproj"/>
   </Folder>
 </Solution>
