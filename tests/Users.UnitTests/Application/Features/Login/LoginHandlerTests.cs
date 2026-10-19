@@ -24,7 +24,8 @@ public class LoginHandlerTests
     {
         await RegisterAccountAsync();
 
-        var response = await _handler.HandleAsync(new LoginCommand(Email, Password), TestContext.Current.CancellationToken);
+        var response =
+            await _handler.HandleAsync(new LoginCommand(Email, Password), TestContext.Current.CancellationToken);
 
         Assert.Equal($"token-for-{_userId}", response.AccessToken);
         Assert.Equal(FakeAccessTokenIssuer.ExpiresAtUtc, response.ExpiresAtUtc);
@@ -41,11 +42,10 @@ public class LoginHandlerTests
     }
 
     [Fact]
-    public async Task HandleAsync_UnknownEmail_ThrowsInvalidCredentials()
-    {
+    public async Task HandleAsync_UnknownEmail_ThrowsInvalidCredentials() =>
         await Assert.ThrowsAsync<InvalidCredentialsException>(() =>
-            _handler.HandleAsync(new LoginCommand("nobody@example.com", Password), TestContext.Current.CancellationToken));
-    }
+            _handler.HandleAsync(new LoginCommand("nobody@example.com", Password),
+                TestContext.Current.CancellationToken));
 
     [Fact]
     public void LoginCommand_ToString_DoesNotContainPassword()

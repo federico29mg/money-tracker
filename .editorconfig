@@ -196,6 +196,9 @@ csharp_space_between_square_brackets = false
 csharp_preserve_single_line_blocks = true
 csharp_preserve_single_line_statements = true
 
+# Rider/ReSharper: keep initializers laid out as written (one member per line stays that way)
+resharper_keep_existing_initializer_arrangement = true
+
 #### Naming styles ####
 [*.{cs,vb}]
 

@@ -91,14 +91,15 @@ public class UsersLayerTests
 
         rule.Check(UsersArchitecture);
     }
-    
+
     [Fact]
     public void Application_ShouldNotDependOn_IdentityFrameworks()
     {
         IArchRule rule = Types().That().Are(ApplicationLayer)
             .Should().NotDependOnAnyTypesThat()
             .ResideInNamespaceMatching(@"^Microsoft\.(AspNetCore\.Identity|Extensions\.Identity|IdentityModel)(\..*)?$")
-            .Because("authentication is reached only through ports such as IIdentityService and IAccessTokenIssuer, so the identity provider can be replaced");
+            .Because(
+                "authentication is reached only through ports such as IIdentityService and IAccessTokenIssuer, so the identity provider can be replaced");
 
         rule.Check(UsersArchitecture);
     }

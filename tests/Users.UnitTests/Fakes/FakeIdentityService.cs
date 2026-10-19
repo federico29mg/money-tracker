@@ -22,7 +22,7 @@ public sealed class FakeIdentityService : IIdentityService
     }
 
     public Task<UserId?> ValidateCredentialsAsync(string email, string password, CancellationToken cancellationToken) =>
-        Task.FromResult(_accounts.TryGetValue(email, out var account) && account.Password == password
+        Task.FromResult<UserId?>(_accounts.TryGetValue(email, out var account) && account.Password == password
             ? account.UserId
-            : (UserId?)null);
+            : null);
 }

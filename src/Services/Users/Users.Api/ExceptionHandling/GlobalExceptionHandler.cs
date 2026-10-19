@@ -41,7 +41,8 @@ internal sealed class GlobalExceptionHandler(
             Title = "Invalid request"
         },
         DomainException => Problem(StatusCodes.Status400BadRequest, "Invalid request", exception.Message),
-        InvalidCredentialsException => Problem(StatusCodes.Status401Unauthorized, "Authentication failed", exception.Message),
+        InvalidCredentialsException => Problem(StatusCodes.Status401Unauthorized, "Authentication failed",
+            exception.Message),
         NotFoundException => Problem(StatusCodes.Status404NotFound, "Resource not found", exception.Message),
         ConflictException => Problem(StatusCodes.Status409Conflict, "Conflict", exception.Message),
         _ => Problem(StatusCodes.Status500InternalServerError, "An unexpected error occurred", detail: null)

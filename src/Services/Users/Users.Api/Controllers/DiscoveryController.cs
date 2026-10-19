@@ -13,7 +13,7 @@ namespace Users.Api.Controllers;
 public sealed class DiscoveryController(IOptions<JwtOptions> jwtOptions, JwtSigningKey signingKey) : ControllerBase
 {
     private static readonly string[] SupportedAlgorithms = ["RS256"];
-    
+
     [HttpGet("openid-configuration")]
     public IActionResult GetConfiguration() => Ok(new Dictionary<string, object>
     {
