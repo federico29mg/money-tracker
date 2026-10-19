@@ -41,14 +41,14 @@ public sealed class Transaction
     public AccountId AccountId { get; }
     public CategoryId CategoryId { get; }
     public TransactionType Type { get; }
-    
+
     // What was charged, in the currency it was charged in (e.g. 50 USD on a COP card).
     public Money Amount { get; }
-    
+
     // Units of the account currency per 1 unit of the amount's currency (e.g. 4103.25 COP per USD).
     // 1 when the currencies match; null until a foreign-currency transaction is settled.
     public decimal? ExchangeRate { get; private set; }
-    
+
     // What it actually cost in the account's currency: Amount × ExchangeRate, rounded to cents.
     public Money? SettledAmount { get; private set; }
     public DateOnly Date { get; }
@@ -164,7 +164,7 @@ public sealed class Transaction
             ? throw new DomainException($"Description cannot exceed {MaxDescriptionLength} characters.")
             : trimmed;
     }
-    
+
     private static string NormalizeName(string? name)
     {
         if (string.IsNullOrWhiteSpace(name))
