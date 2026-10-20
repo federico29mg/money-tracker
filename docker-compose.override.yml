@@ -10,3 +10,9 @@ services:
       ASPNETCORE_ENVIRONMENT: Development
     ports:
       - "5100:8080"
+    
+  transactions-api:
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+    ports:
+      - "5101:8080"

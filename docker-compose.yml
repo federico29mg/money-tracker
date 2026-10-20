@@ -25,6 +25,21 @@ services:
     depends_on:
       sqlserver:
         condition: service_healthy
+        
+  transactions-api:
+    build:
+      context: .
+      dockerfile: src/Services/Transactions/Dockerfile
+    environment:
+      ConnectionStrings__TransactionsDb: "Server=sqlserver,1433;Database=TransactionsDb;User Id=sa;Password=${MSSQL_SA_PASSWORD};TrustServerCertificate=True"
+      # Users' public keys are fetched over the internal Docker network, which has no TLS.
+      Jwt__MetadataAddress: "http://users-api:8080/.well-known/openid-configuration"
+      Jwt__RequireHttpsMetadata: "false"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      users-api:
+        condition: service_started
 
 volumes:
   sqlserver-data:
