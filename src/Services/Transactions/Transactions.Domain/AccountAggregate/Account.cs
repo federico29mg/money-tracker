@@ -14,6 +14,16 @@ public sealed class Account
         Type = type;
         OpeningBalance = openingBalance;
     }
+    
+    // Used by EF Core when loading: it can't pass complex types to constructors and sets OpeningBalance itself.
+    private Account(AccountId id, UserId userId, string name, AccountType type)
+    {
+        Id = id;
+        UserId = userId;
+        Name = name;
+        Type = type;
+        OpeningBalance = null!;
+    }
 
     public AccountId Id { get; }
     public UserId UserId { get; }
