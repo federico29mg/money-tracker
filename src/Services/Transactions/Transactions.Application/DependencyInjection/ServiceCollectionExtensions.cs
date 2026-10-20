@@ -13,6 +13,8 @@ using Transactions.Application.Features.Categories.RenameCategory;
 using Transactions.Application.Features.Transactions.GetTransaction;
 using Transactions.Application.Features.Transactions.GetTransactions;
 using Transactions.Application.Features.Transactions.RecordTransaction;
+using Transactions.Application.Features.Transactions.GetPendingTransactions;
+using Transactions.Application.Features.Transactions.SettleTransactions;
 
 namespace Transactions.Application.DependencyInjection;
 
@@ -33,6 +35,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<RecordTransactionHandler>();
         services.AddScoped<GetTransactionHandler>();
         services.AddScoped<GetTransactionsHandler>();
+        services.AddScoped<GetPendingTransactionsHandler>();
+        services.AddScoped<SettleTransactionsHandler>(); 
 
         return services;
     }

@@ -3,7 +3,9 @@ using Transactions.Domain.Common;
 
 namespace Transactions.Application.Features.Accounts.GetAccounts;
 
-public sealed class GetAccountsHandler(IAccountRepository accountRepository)
+public sealed class GetAccountsHandler(
+    IAccountRepository accountRepository,
+    ITransactionRepository transactionRepository)
 {
     public async Task<IReadOnlyList<AccountResponse>> HandleAsync(
         GetAccountsQuery query,
@@ -11,9 +13,16 @@ public sealed class GetAccountsHandler(IAccountRepository accountRepository)
     {
         ArgumentNullException.ThrowIfNull(query);
 
-        var accounts = await accountRepository.ListAsync(
-            UserId.From(query.UserId), query.IncludeArchived, cancellationToken);
+        var userId = UserId.From(query.UserId);
+        var accounts = await accountRepository.ListAsync(userId, query.IncludeArchived, cancellationToken);
 
-        return accounts.Select(AccountResponse.From).ToList();
+        // One query for all accounts instead of one per account.
+        var totals = (await transactionRepository.GetTotalsAsync(
+                [.. accounts.Select(account => account.Id)], userId, cancellationToken))
+            .ToDictionary(accountTotals => accountTotals.AccountId);
+
+        return [.. accounts
+            .Select(account => AccountResponse.From(
+                account, totals.GetValueOrDefault(account.Id) ?? AccountTotals.Empty(account.Id)))];
     }
 }
