@@ -18,6 +18,7 @@ using Transactions.Application.Features.Transactions.SettleTransactions;
 using Transactions.Application.Features.Transfers.GetTransfer;
 using Transactions.Application.Features.Transfers.GetTransfers;
 using Transactions.Application.Features.Transfers.RecordTransfer;
+using Transactions.Application.Features.Transfers.PayCreditCard;
 
 namespace Transactions.Application.DependencyInjection;
 
@@ -43,6 +44,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<RecordTransferHandler>();
         services.AddScoped<GetTransferHandler>();
         services.AddScoped<GetTransfersHandler>();
+        services.AddScoped<PayCreditCardHandler>();
 
         return services;
     }

@@ -11,6 +11,7 @@ using Transactions.Application.Features.Accounts.OpenAccount;
 using Transactions.Application.Features.Accounts.RenameAccount;
 using Transactions.Application.Features.Transactions.GetPendingTransactions;
 using Transactions.Application.Features.Transactions.SettleTransactions;
+using Transactions.Application.Features.Transfers.PayCreditCard;
 
 namespace Transactions.Api.Controllers;
 
@@ -103,4 +104,33 @@ public sealed class AccountsController : ControllerBase
             new SettleTransactionsCommand(
                 User.GetUserId(), id, request.TransactionIds, request.ExchangeRate, request.TotalPaid),
             cancellationToken);
+
+    [HttpPost("{id:guid}/payments")]
+    [ProducesResponseType<PayCreditCardResponse>(StatusCodes.Status201Created)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<PayCreditCardResponse>> PayCreditCard(
+        Guid id,
+        PayCreditCardRequest request,
+        [FromServices] PayCreditCardHandler handler,
+        CancellationToken cancellationToken)
+    {
+        var response = await handler.HandleAsync(
+            new PayCreditCardCommand(
+                User.GetUserId(),
+                id,
+                request.FromAccountId,
+                request.Amount,
+                request.ReceivedAmount,
+                request.Date,
+                request.Description,
+                request.Settlement is { } settlement
+                    ? new PaymentSettlement(settlement.TransactionIds, settlement.ExchangeRate, settlement.TotalPaid)
+                    : null),
+            cancellationToken);
+
+        // The payment is a transfer, so its Location points to GET /api/transfers/{id}.
+        return CreatedAtAction(
+            nameof(TransfersController.GetTransfer), "Transfers", new { id = response.TransferId }, response);
+    }
 }
