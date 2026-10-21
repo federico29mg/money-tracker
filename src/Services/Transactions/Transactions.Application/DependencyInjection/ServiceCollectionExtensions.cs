@@ -15,6 +15,9 @@ using Transactions.Application.Features.Transactions.GetTransactions;
 using Transactions.Application.Features.Transactions.RecordTransaction;
 using Transactions.Application.Features.Transactions.GetPendingTransactions;
 using Transactions.Application.Features.Transactions.SettleTransactions;
+using Transactions.Application.Features.Transfers.GetTransfer;
+using Transactions.Application.Features.Transfers.GetTransfers;
+using Transactions.Application.Features.Transfers.RecordTransfer;
 
 namespace Transactions.Application.DependencyInjection;
 
@@ -36,7 +39,10 @@ public static class ServiceCollectionExtensions
         services.AddScoped<GetTransactionHandler>();
         services.AddScoped<GetTransactionsHandler>();
         services.AddScoped<GetPendingTransactionsHandler>();
-        services.AddScoped<SettleTransactionsHandler>(); 
+        services.AddScoped<SettleTransactionsHandler>();
+        services.AddScoped<RecordTransferHandler>();
+        services.AddScoped<GetTransferHandler>();
+        services.AddScoped<GetTransfersHandler>();
 
         return services;
     }

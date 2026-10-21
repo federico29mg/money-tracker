@@ -3,6 +3,7 @@ using Transactions.Domain.AccountAggregate;
 using Transactions.Domain.CategoryAggregate;
 using Transactions.Domain.Common;
 using Transactions.Domain.TransactionAggregate;
+using Transactions.Domain.TransferAggregate;
 using Transactions.UnitTests.Fakes;
 
 namespace Transactions.UnitTests.Application.Features.Accounts;
@@ -15,6 +16,7 @@ public class GetAccountsHandlerTests
     private readonly GetAccountsHandler _handler;
     private readonly InMemoryAccountRepository _repository = new();
     private readonly InMemoryTransactionRepository _transactions = new();
+    private readonly InMemoryTransferRepository _transfers = new();
     private readonly Account _visa = Account.Open(Owner, "Visa", AccountType.CreditCard, Money.Zero(Currency.Cop));
 
     public GetAccountsHandlerTests()
@@ -28,7 +30,7 @@ public class GetAccountsHandlerTests
         _repository.Add(Account.Open(
             UserId.From(Guid.NewGuid()), "Someone else's", AccountType.Cash, Money.Zero(Currency.Cop)));
 
-        _handler = new GetAccountsHandler(_repository, _transactions);
+        _handler = new GetAccountsHandler(_repository, _transactions, _transfers);
     }
 
     [Fact]
@@ -70,5 +72,17 @@ public class GetAccountsHandlerTests
             new GetAccountsQuery(Owner.Value), TestContext.Current.CancellationToken);
 
         Assert.Equal([100_000m, -85_000m], accounts.Select(account => account.Balance));
+    }
+    
+    [Fact]
+    public async Task HandleAsync_TransferBetweenAccounts_MovesTheAmount()
+    {
+        _transfers.Add(Transfer.Record(
+            _cash, _visa, Money.Of(30_000m, Currency.Cop), null, new DateOnly(2026, 10, 20), "Card payment"));
+
+        var accounts = await _handler.HandleAsync(
+            new GetAccountsQuery(Owner.Value), TestContext.Current.CancellationToken);
+
+        Assert.Equal([100_000m - 30_000m, 30_000m], accounts.Select(account => account.Balance));
     }
 }

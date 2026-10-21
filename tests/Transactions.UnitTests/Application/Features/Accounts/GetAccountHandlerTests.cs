@@ -5,6 +5,7 @@ using Transactions.Domain.AccountAggregate;
 using Transactions.Domain.CategoryAggregate;
 using Transactions.Domain.Common;
 using Transactions.Domain.TransactionAggregate;
+using Transactions.Domain.TransferAggregate;
 using Transactions.UnitTests.Fakes;
 
 namespace Transactions.UnitTests.Application.Features.Accounts;
@@ -21,11 +22,12 @@ public class GetAccountHandlerTests
 
     private readonly GetAccountHandler _handler;
     private readonly InMemoryTransactionRepository _transactions = new();
+    private readonly InMemoryTransferRepository _transfers = new();
 
     public GetAccountHandlerTests()
     {
         _accounts.Add(_card);
-        _handler = new GetAccountHandler(_accounts, _transactions);
+        _handler = new GetAccountHandler(_accounts, _transactions, _transfers);
     }
 
     private Task<AccountResponse> GetAsync() =>
@@ -78,6 +80,17 @@ public class GetAccountHandlerTests
 
         Assert.Equal(-250_000m, response.Balance);
         Assert.Equal([new PendingAmountResponse("USD", -45m)], response.Pending);
+    }
+    
+    [Fact]
+    public async Task HandleAsync_CardPayment_ReducesTheDebt()
+    {
+        var checking = Account.Open(Owner, "Checking", AccountType.Checking, Money.Zero(Currency.Cop));
+        _transfers.Add(Transfer.Record(checking, _card, Money.Of(100_000m, Currency.Cop), null, Date, null));
+
+        var response = await GetAsync();
+
+        Assert.Equal(-250_000m + 100_000m, response.Balance);
     }
 
     [Fact]

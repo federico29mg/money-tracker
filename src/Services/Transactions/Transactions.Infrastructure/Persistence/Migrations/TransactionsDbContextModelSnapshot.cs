@@ -178,6 +178,74 @@ namespace Transactions.Infrastructure.Persistence.Migrations
                     b.ToTable("Transactions", (string)null);
                 });
 
+            modelBuilder.Entity("Transactions.Domain.TransferAggregate.Transfer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<Guid>("FromAccountId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ToAccountId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.ComplexProperty(typeof(Dictionary<string, object>), "Amount", "Transactions.Domain.TransferAggregate.Transfer.Amount#Money", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<decimal>("Amount")
+                                .HasPrecision(18, 2)
+                                .HasColumnType("decimal(18,2)")
+                                .HasColumnName("Amount");
+
+                            b1.Property<string>("Currency")
+                                .IsRequired()
+                                .HasMaxLength(3)
+                                .IsUnicode(false)
+                                .HasColumnType("char(3)")
+                                .HasColumnName("Currency")
+                                .IsFixedLength();
+                        });
+
+                    b.ComplexProperty(typeof(Dictionary<string, object>), "ReceivedAmount", "Transactions.Domain.TransferAggregate.Transfer.ReceivedAmount#Money", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<decimal>("Amount")
+                                .HasPrecision(18, 2)
+                                .HasColumnType("decimal(18,2)")
+                                .HasColumnName("ReceivedAmount");
+
+                            b1.Property<string>("Currency")
+                                .IsRequired()
+                                .HasMaxLength(3)
+                                .IsUnicode(false)
+                                .HasColumnType("char(3)")
+                                .HasColumnName("ReceivedCurrency")
+                                .IsFixedLength();
+                        });
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FromAccountId");
+
+                    b.HasIndex("ToAccountId");
+
+                    b.HasIndex("UserId", "Date");
+
+                    b.ToTable("Transfers", (string)null);
+                });
+
             modelBuilder.Entity("Transactions.Domain.TransactionAggregate.Transaction", b =>
                 {
                     b.HasOne("Transactions.Domain.AccountAggregate.Account", null)
@@ -189,6 +257,21 @@ namespace Transactions.Infrastructure.Persistence.Migrations
                     b.HasOne("Transactions.Domain.CategoryAggregate.Category", null)
                         .WithMany()
                         .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Transactions.Domain.TransferAggregate.Transfer", b =>
+                {
+                    b.HasOne("Transactions.Domain.AccountAggregate.Account", null)
+                        .WithMany()
+                        .HasForeignKey("FromAccountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Transactions.Domain.AccountAggregate.Account", null)
+                        .WithMany()
+                        .HasForeignKey("ToAccountId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

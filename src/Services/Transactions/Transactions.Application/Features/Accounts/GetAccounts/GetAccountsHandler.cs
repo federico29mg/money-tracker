@@ -5,7 +5,8 @@ namespace Transactions.Application.Features.Accounts.GetAccounts;
 
 public sealed class GetAccountsHandler(
     IAccountRepository accountRepository,
-    ITransactionRepository transactionRepository)
+    ITransactionRepository transactionRepository,
+    ITransferRepository transferRepository)
 {
     public async Task<IReadOnlyList<AccountResponse>> HandleAsync(
         GetAccountsQuery query,
@@ -15,14 +16,19 @@ public sealed class GetAccountsHandler(
 
         var userId = UserId.From(query.UserId);
         var accounts = await accountRepository.ListAsync(userId, query.IncludeArchived, cancellationToken);
+        var accountIds = accounts.Select(account => account.Id).ToList();
 
-        // One query for all accounts instead of one per account.
-        var totals = (await transactionRepository.GetTotalsAsync(
-                [.. accounts.Select(account => account.Id)], userId, cancellationToken))
+        // One query per kind of total for all accounts, instead of queries per account.
+        var totals = (await transactionRepository.GetTotalsAsync(accountIds, userId, cancellationToken))
             .ToDictionary(accountTotals => accountTotals.AccountId);
+        var transfers = await transferRepository.GetNetByAccountAsync(accountIds, userId, cancellationToken);
 
-        return [.. accounts
-            .Select(account => AccountResponse.From(
-                account, totals.GetValueOrDefault(account.Id) ?? AccountTotals.Empty(account.Id)))];
+        return
+        [
+            .. accounts.Select(account => AccountResponse.From(
+                account,
+                totals.GetValueOrDefault(account.Id) ?? AccountTotals.Empty(account.Id),
+                transfers.GetValueOrDefault(account.Id)))
+        ];
     }
 }
