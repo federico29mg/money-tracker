@@ -1,4 +1,5 @@
 ﻿using Users.Application.Abstractions;
+using Users.Application.IntegrationEvents;
 using Users.Domain.Common;
 using Users.Domain.UserAggregate;
 
@@ -7,6 +8,7 @@ namespace Users.Application.Features.RegisterUser;
 public sealed class RegisterUserHandler(
     IUserRepository userRepository,
     IIdentityService identityService,
+    IOutbox outbox,
     IUnitOfWork unitOfWork)
 {
     public async Task<Guid> HandleAsync(RegisterUserCommand command, CancellationToken cancellationToken)
@@ -24,6 +26,7 @@ public sealed class RegisterUserHandler(
             await identityService.CreateUserAsync(user.Id, command.Email, command.Password, token);
 
             userRepository.Add(user);
+            outbox.Add(new UserRegistered(user.Id.Value, user.Settings.DefaultCurrency.Code));
             await unitOfWork.SaveChangesAsync(token);
         }, cancellationToken);
 

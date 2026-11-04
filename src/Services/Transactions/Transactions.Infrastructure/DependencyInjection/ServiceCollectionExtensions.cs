@@ -1,8 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Azure.Messaging.ServiceBus;
+
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using Transactions.Application.Abstractions;
+using Transactions.Infrastructure.Messaging;
 using Transactions.Infrastructure.Persistence;
 using Transactions.Infrastructure.Persistence.Repositories;
 
@@ -29,6 +32,24 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ITransactionRepository, TransactionRepository>();
         services.AddScoped<ITransferRepository, TransferRepository>();
 
+        services.AddTransactionsMessaging(configuration);
+
         return services;
+    }
+
+    private static void AddTransactionsMessaging(this IServiceCollection services, IConfiguration configuration)
+    {
+        var connectionString = configuration.GetConnectionString("ServiceBus")
+                               ?? throw new InvalidOperationException(
+                                   "Connection string 'ServiceBus' is not configured.");
+
+        services
+            .AddOptions<ServiceBusOptions>()
+            .Bind(configuration.GetSection(ServiceBusOptions.SectionName))
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+
+        services.AddSingleton(_ => new ServiceBusClient(connectionString));
+        services.AddHostedService<UserEventsConsumer>();
     }
 }

@@ -1,4 +1,4 @@
-﻿# Starts the local environment (SQL Server, Users.Api, Transactions.Api) and applies both services' database migrations.
+﻿# Starts the local environment (SQL Server, Service Bus emulator, Users.Api, Transactions.Api) and applies both services' database migrations.
 # Usage: powershell -NoProfile -ExecutionPolicy Bypass -File scripts/dev-up.ps1
 
 $ErrorActionPreference = 'Stop'

@@ -15,6 +15,19 @@ services:
       retries: 10
       start_period: 20s
 
+  # The emulator keeps its messages in the same SQL Server; its topics and subscriptions are declared in Config.json.
+  servicebus-emulator:
+    image: mcr.microsoft.com/azure-messaging/servicebus-emulator:2.0.1
+    volumes:
+      - ./docker/servicebus-emulator/Config.json:/ServiceBus_Emulator/ConfigFiles/Config.json:ro
+    environment:
+      ACCEPT_EULA: "Y"
+      SQL_SERVER: sqlserver
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD}
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+
   users-api:
     build:
       context: .
@@ -22,10 +35,13 @@ services:
     environment:
       ConnectionStrings__UsersDb: "Server=sqlserver,1433;Database=UsersDb;User Id=sa;Password=${MSSQL_SA_PASSWORD};TrustServerCertificate=True"
       Jwt__SigningKey: ${JWT_SIGNING_KEY:?Set JWT_SIGNING_KEY in the .env file}
+      ConnectionStrings__ServiceBus: &servicebus "Endpoint=sb://servicebus-emulator;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=SAS_KEY_VALUE;UseDevelopmentEmulator=true;"
     depends_on:
       sqlserver:
         condition: service_healthy
-        
+      servicebus-emulator:
+        condition: service_started
+
   transactions-api:
     build:
       context: .
@@ -35,10 +51,13 @@ services:
       # Users' public keys are fetched over the internal Docker network, which has no TLS.
       Jwt__MetadataAddress: "http://users-api:8080/.well-known/openid-configuration"
       Jwt__RequireHttpsMetadata: "false"
+      ConnectionStrings__ServiceBus: *servicebus
     depends_on:
       sqlserver:
         condition: service_healthy
       users-api:
+        condition: service_started
+      servicebus-emulator:
         condition: service_started
 
 volumes:

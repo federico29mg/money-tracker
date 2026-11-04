@@ -1,11 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Azure.Messaging.ServiceBus;
+
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
 
 using Users.Application.Abstractions;
 using Users.Infrastructure.Authentication;
 using Users.Infrastructure.Identity;
+using Users.Infrastructure.Messaging;
 using Users.Infrastructure.Persistence;
 using Users.Infrastructure.Persistence.Repositories;
 
@@ -29,6 +33,7 @@ public static class ServiceCollectionExtensions
 
         services.AddUsersIdentity();
         services.AddUsersJwt(configuration);
+        services.AddUsersMessaging(configuration);
 
         return services;
     }
@@ -69,5 +74,27 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton(TimeProvider.System);
         services.AddSingleton<JwtSigningKey>();
         services.AddSingleton<IAccessTokenIssuer, JwtAccessTokenIssuer>();
+    }
+
+    private static void AddUsersMessaging(this IServiceCollection services, IConfiguration configuration)
+    {
+        var connectionString = configuration.GetConnectionString("ServiceBus")
+                               ?? throw new InvalidOperationException(
+                                   "Connection string 'ServiceBus' is not configured.");
+
+        services
+            .AddOptions<ServiceBusOptions>()
+            .Bind(configuration.GetSection(ServiceBusOptions.SectionName))
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+
+        // One client and sender for the whole app: they hold the connection to the broker and are thread-safe.
+        services.AddSingleton(_ => new ServiceBusClient(connectionString));
+        services.AddSingleton(provider => provider.GetRequiredService<ServiceBusClient>()
+            .CreateSender(provider.GetRequiredService<IOptions<ServiceBusOptions>>().Value.TopicName));
+
+        services.TryAddSingleton(TimeProvider.System);
+        services.AddScoped<IOutbox, Outbox>();
+        services.AddHostedService<OutboxPublisher>();
     }
 }

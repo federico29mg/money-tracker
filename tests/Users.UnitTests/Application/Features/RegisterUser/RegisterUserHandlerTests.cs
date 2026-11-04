@@ -1,5 +1,6 @@
 ﻿using Users.Application.Common;
 using Users.Application.Features.RegisterUser;
+using Users.Application.IntegrationEvents;
 using Users.Domain.Common;
 using Users.Domain.UserAggregate;
 using Users.UnitTests.Fakes;
@@ -13,11 +14,12 @@ public class RegisterUserHandlerTests
 
     private readonly RegisterUserHandler _handler;
     private readonly FakeIdentityService _identityService = new();
+    private readonly FakeOutbox _outbox = new();
     private readonly InMemoryUserRepository _repository = new();
     private readonly FakeUnitOfWork _unitOfWork = new();
 
     public RegisterUserHandlerTests() =>
-        _handler = new RegisterUserHandler(_repository, _identityService, _unitOfWork);
+        _handler = new RegisterUserHandler(_repository, _identityService, _outbox, _unitOfWork);
 
     private static RegisterUserCommand Command(string displayName = "Ana", string? currencyCode = null) =>
         new(Email, Password, displayName, currencyCode);
@@ -79,6 +81,7 @@ public class RegisterUserHandlerTests
 
         Assert.Empty(_repository.StoredUsers);
         Assert.Empty(_identityService.Accounts);
+        Assert.Empty(_outbox.Events);
         Assert.Equal(0, _unitOfWork.SaveChangesCallCount);
     }
 
@@ -101,5 +104,14 @@ public class RegisterUserHandlerTests
             _handler.HandleAsync(Command(displayName: "Bea"), TestContext.Current.CancellationToken));
 
         Assert.Single(_repository.StoredUsers);
+        Assert.Single(_outbox.Events);
+    }
+
+    [Fact]
+    public async Task HandleAsync_ValidCommand_AddsUserRegisteredEvent()
+    {
+        var userId = await _handler.HandleAsync(Command(currencyCode: "usd"), TestContext.Current.CancellationToken);
+
+        Assert.Equal(new UserRegistered(userId, "USD"), Assert.Single(_outbox.Events));
     }
 }
