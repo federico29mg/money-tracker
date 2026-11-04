@@ -11,15 +11,15 @@ using Transactions.Application.Features.Categories.GetCategories;
 using Transactions.Application.Features.Categories.GetCategory;
 using Transactions.Application.Features.Categories.RenameCategory;
 using Transactions.Application.Features.Provisioning.ProvisionUser;
+using Transactions.Application.Features.Transactions.GetPendingTransactions;
 using Transactions.Application.Features.Transactions.GetTransaction;
 using Transactions.Application.Features.Transactions.GetTransactions;
 using Transactions.Application.Features.Transactions.RecordTransaction;
-using Transactions.Application.Features.Transactions.GetPendingTransactions;
 using Transactions.Application.Features.Transactions.SettleTransactions;
 using Transactions.Application.Features.Transfers.GetTransfer;
 using Transactions.Application.Features.Transfers.GetTransfers;
-using Transactions.Application.Features.Transfers.RecordTransfer;
 using Transactions.Application.Features.Transfers.PayCreditCard;
+using Transactions.Application.Features.Transfers.RecordTransfer;
 
 namespace Transactions.Application.DependencyInjection;
 

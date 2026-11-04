@@ -81,7 +81,7 @@ public class GetAccountHandlerTests
         Assert.Equal(-250_000m, response.Balance);
         Assert.Equal([new PendingAmountResponse("USD", -45m)], response.Pending);
     }
-    
+
     [Fact]
     public async Task HandleAsync_CardPayment_ReducesTheDebt()
     {

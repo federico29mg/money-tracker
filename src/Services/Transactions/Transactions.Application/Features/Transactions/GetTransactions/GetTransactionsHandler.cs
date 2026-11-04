@@ -28,7 +28,7 @@ public sealed class GetTransactionsHandler(ITransactionRepository transactionRep
         var totalCount = await transactionRepository.CountAsync(userId, filter, cancellationToken);
 
         return new PagedResponse<TransactionResponse>(
-           [.. transactions.Select(TransactionResponse.From)], query.Page, query.PageSize, totalCount);
+            [.. transactions.Select(TransactionResponse.From)], query.Page, query.PageSize, totalCount);
     }
 
     private static void Validate(GetTransactionsQuery query)

@@ -88,19 +88,21 @@ internal sealed class TransactionRepository(TransactionsDbContext dbContext) : I
             })
             .ToListAsync(cancellationToken);
 
-        return 
-            [.. 
-                settled.Keys
-                    .Union(pending.Select(total => total.AccountId))
-                    .Select(accountId => new AccountTotals(
-                        accountId,
-                        settled.GetValueOrDefault(accountId),
-                        [.. pending
+        return
+        [
+            ..
+            settled.Keys
+                .Union(pending.Select(total => total.AccountId))
+                .Select(accountId => new AccountTotals(
+                    accountId,
+                    settled.GetValueOrDefault(accountId),
+                    [
+                        .. pending
                             .Where(total => total.AccountId == accountId)
                             .OrderBy(total => total.Currency.Code, StringComparer.Ordinal)
                             .Select(total => Money.Of(total.Net, total.Currency))
-                        ]))
-            ];
+                    ]))
+        ];
     }
 
     public void Add(Transaction transaction) => dbContext.Set<Transaction>().Add(transaction);

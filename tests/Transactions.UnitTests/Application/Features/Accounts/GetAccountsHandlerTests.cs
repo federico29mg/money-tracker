@@ -73,7 +73,7 @@ public class GetAccountsHandlerTests
 
         Assert.Equal([100_000m, -85_000m], accounts.Select(account => account.Balance));
     }
-    
+
     [Fact]
     public async Task HandleAsync_TransferBetweenAccounts_MovesTheAmount()
     {

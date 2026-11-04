@@ -8,7 +8,7 @@ public interface ITransactionRepository
 {
     // Returns null when the transaction doesn't exist or belongs to another user, so callers can't tell the two apart.
     Task<Transaction?> GetByIdAsync(TransactionId id, UserId userId, CancellationToken cancellationToken);
-    
+
     // Only the user's own transactions; ids that don't match are left out.
     Task<IReadOnlyList<Transaction>> ListByIdsAsync(
         IReadOnlyCollection<TransactionId> ids,
@@ -24,13 +24,13 @@ public interface ITransactionRepository
         CancellationToken cancellationToken);
 
     Task<int> CountAsync(UserId userId, TransactionFilter filter, CancellationToken cancellationToken);
-    
+
     // Unsettled transactions of one account, oldest first.
     Task<IReadOnlyList<Transaction>> ListPendingAsync(
         AccountId accountId,
         UserId userId,
         CancellationToken cancellationToken);
-    
+
     // Per account: settled income minus settled expenses, in the account's currency.
     // Pending: per account and currency, unsettled income minus unsettled expenses.
     // Accounts without transactions are left out.

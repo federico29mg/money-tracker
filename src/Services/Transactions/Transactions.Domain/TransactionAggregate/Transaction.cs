@@ -35,7 +35,7 @@ public sealed class Transaction
         Name = name;
         Description = description;
     }
-    
+
     // Used by EF Core when loading: it can't pass complex types to constructors and sets the Money properties itself.
     private Transaction(
         TransactionId id,
