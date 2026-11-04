@@ -1,4 +1,5 @@
 ﻿using Transactions.Application.Abstractions;
+using Transactions.Application.Common;
 using Transactions.Application.Features.Accounts;
 using Transactions.Application.Features.Categories;
 using Transactions.Domain.Common;
@@ -17,8 +18,13 @@ public sealed class RecordTransactionHandler(
         ArgumentNullException.ThrowIfNull(command);
 
         var account = await accountRepository.GetRequiredAsync(command.AccountId, command.UserId, cancellationToken);
-        var category =
-            await categoryRepository.GetRequiredAsync(command.CategoryId, command.UserId, cancellationToken);
+        var category = command.CategoryId is { } categoryId
+            ? await categoryRepository.GetRequiredAsync(categoryId, command.UserId, cancellationToken)
+            : await categoryRepository.GetDefaultAsync(UserId.From(command.UserId), command.Type, cancellationToken)
+              ?? throw new ValidationException(new Dictionary<string, string[]>
+              {
+                  [nameof(command.CategoryId)] = [$"There's no default {command.Type} category; choose a category."]
+              });
 
         var currency = command.CurrencyCode is null ? account.Currency : Currency.FromCode(command.CurrencyCode);
 

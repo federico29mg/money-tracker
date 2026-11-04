@@ -42,4 +42,19 @@ public class ArchiveCategoryHandlerTests
         Assert.False(_category.IsArchived);
         Assert.Equal(0, _unitOfWork.SaveChangesCallCount);
     }
+
+    [Fact]
+    public async Task HandleAsync_DefaultCategory_ThrowsDomainExceptionAndSavesNothing()
+    {
+        var uncategorized = Category.CreateDefault(Owner, TransactionType.Expense);
+        _repository.Add(uncategorized);
+
+        await Assert.ThrowsAsync<DomainException>(() =>
+            _handler.HandleAsync(
+                new ArchiveCategoryCommand(Owner.Value, uncategorized.Id.Value),
+                TestContext.Current.CancellationToken));
+
+        Assert.False(uncategorized.IsArchived);
+        Assert.Equal(0, _unitOfWork.SaveChangesCallCount);
+    }
 }

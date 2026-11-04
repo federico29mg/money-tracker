@@ -23,5 +23,8 @@ public interface ICategoryRepository
         CategoryId? excludingId,
         CancellationToken cancellationToken);
 
+    // The user's default category for the type, or null if they haven't been provisioned yet.
+    Task<Category?> GetDefaultAsync(UserId userId, TransactionType type, CancellationToken cancellationToken);
+
     void Add(Category category);
 }

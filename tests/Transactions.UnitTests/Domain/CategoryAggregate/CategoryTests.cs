@@ -62,4 +62,38 @@ public class CategoryTests
 
         Assert.True(category.IsArchived);
     }
+
+    [Fact]
+    public void CreateDefault_CreatesUncategorizedDefault()
+    {
+        var category = Category.CreateDefault(UserId, TransactionType.Income);
+
+        Assert.Equal(Category.DefaultName, category.Name);
+        Assert.Equal(TransactionType.Income, category.Type);
+        Assert.True(category.IsDefault);
+    }
+
+    [Fact]
+    public void Create_IsNotDefault() => Assert.False(CreateCategory().IsDefault);
+
+    [Fact]
+    public void Archive_DefaultCategory_ThrowsDomainException()
+    {
+        var category = Category.CreateDefault(UserId, TransactionType.Expense);
+
+        Assert.Throws<DomainException>(category.Archive);
+        Assert.False(category.IsArchived);
+    }
+
+    [Fact]
+    public void MakeDefault_ArchivedCategory_MakesItDefaultAndActive()
+    {
+        var category = CreateCategory(Category.DefaultName);
+        category.Archive();
+
+        category.MakeDefault();
+
+        Assert.True(category.IsDefault);
+        Assert.False(category.IsArchived);
+    }
 }

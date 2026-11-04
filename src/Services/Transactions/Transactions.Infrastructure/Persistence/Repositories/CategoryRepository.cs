@@ -37,5 +37,11 @@ internal sealed class CategoryRepository(TransactionsDbContext dbContext) : ICat
                                   && category.Name == name
                                   && (excludingId == null || category.Id != excludingId), cancellationToken);
 
+    public Task<Category?> GetDefaultAsync(UserId userId, TransactionType type, CancellationToken cancellationToken) =>
+        dbContext.Set<Category>()
+            .FirstOrDefaultAsync(category => category.UserId == userId
+                                             && category.Type == type
+                                             && category.IsDefault, cancellationToken);
+
     public void Add(Category category) => dbContext.Set<Category>().Add(category);
 }

@@ -32,11 +32,12 @@ public class RecordTransactionHandlerTests
         string? currencyCode = null,
         Guid? userId = null,
         Guid? accountId = null,
-        Guid? categoryId = null) =>
+        Guid? categoryId = null,
+        bool withoutCategory = false) =>
         new(
             userId ?? Owner.Value,
             accountId ?? _copCard.Id.Value,
-            categoryId ?? _groceries.Id.Value,
+            withoutCategory ? null : categoryId ?? _groceries.Id.Value,
             TransactionType.Expense,
             amount,
             currencyCode,
@@ -106,5 +107,27 @@ public class RecordTransactionHandlerTests
 
         Assert.Empty(_transactions.StoredTransactions);
         Assert.Equal(0, _unitOfWork.SaveChangesCallCount);
+    }
+
+    [Fact]
+    public async Task HandleAsync_NoCategory_UsesDefaultCategoryForTheType()
+    {
+        var uncategorized = Category.CreateDefault(Owner, TransactionType.Expense);
+        _categories.Add(uncategorized);
+        _categories.Add(Category.CreateDefault(Owner, TransactionType.Income));
+
+        await _handler.HandleAsync(Command(withoutCategory: true), TestContext.Current.CancellationToken);
+
+        Assert.Equal(uncategorized.Id, Assert.Single(_transactions.StoredTransactions).CategoryId);
+    }
+
+    [Fact]
+    public async Task HandleAsync_NoCategoryAndNoDefault_ThrowsValidationException()
+    {
+        var exception = await Assert.ThrowsAsync<ValidationException>(() =>
+            _handler.HandleAsync(Command(withoutCategory: true), TestContext.Current.CancellationToken));
+
+        Assert.Contains(nameof(RecordTransactionCommand.CategoryId), exception.Errors.Keys);
+        Assert.Empty(_transactions.StoredTransactions);
     }
 }

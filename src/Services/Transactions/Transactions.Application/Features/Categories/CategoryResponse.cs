@@ -3,12 +3,13 @@ using Transactions.Domain.Common;
 
 namespace Transactions.Application.Features.Categories;
 
-public sealed record CategoryResponse(Guid Id, string Name, TransactionType Type, bool IsArchived)
+public sealed record CategoryResponse(Guid Id, string Name, TransactionType Type, bool IsArchived, bool IsDefault)
 {
     public static CategoryResponse From(Category category)
     {
         ArgumentNullException.ThrowIfNull(category);
 
-        return new CategoryResponse(category.Id.Value, category.Name, category.Type, category.IsArchived);
+        return new CategoryResponse(
+            category.Id.Value, category.Name, category.Type, category.IsArchived, category.IsDefault);
     }
 }

@@ -4,6 +4,7 @@ namespace Transactions.Domain.CategoryAggregate;
 
 public sealed class Category
 {
+    public const string DefaultName = "Uncategorized";
     public const int MaxNameLength = 50;
 
     private Category(CategoryId id, UserId userId, string name, TransactionType type)
@@ -20,6 +21,9 @@ public sealed class Category
     public TransactionType Type { get; }
     public bool IsArchived { get; private set; }
 
+    // Used when a transaction is recorded without a category. One per user and type, and it can't be archived.
+    public bool IsDefault { get; private set; }
+
     public static Category Create(UserId userId, string name, TransactionType type)
     {
         if (userId == default)
@@ -35,9 +39,32 @@ public sealed class Category
         return new Category(CategoryId.New(), userId, NormalizeName(name), type);
     }
 
+    public static Category CreateDefault(UserId userId, TransactionType type)
+    {
+        var category = Create(userId, DefaultName, type);
+        category.IsDefault = true;
+
+        return category;
+    }
+
     public void Rename(string name) => Name = NormalizeName(name);
 
-    public void Archive() => IsArchived = true;
+    public void Archive()
+    {
+        if (IsDefault)
+        {
+            throw new DomainException($"Category '{Name}' is the default {Type} category and can't be archived.");
+        }
+
+        IsArchived = true;
+    }
+
+    // Turns an existing category into the default, e.g. one the user had already named "Uncategorized".
+    public void MakeDefault()
+    {
+        IsDefault = true;
+        IsArchived = false;
+    }
 
     private static string NormalizeName(string? name)
     {

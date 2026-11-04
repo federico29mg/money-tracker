@@ -2,11 +2,11 @@
 
 namespace Transactions.Application.Features.Transactions.RecordTransaction;
 
-// A null CurrencyCode means the account's currency.
+// A null CategoryId means the user's default category for the type; a null CurrencyCode, the account's currency.
 public sealed record RecordTransactionCommand(
     Guid UserId,
     Guid AccountId,
-    Guid CategoryId,
+    Guid? CategoryId,
     TransactionType Type,
     decimal Amount,
     string? CurrencyCode,

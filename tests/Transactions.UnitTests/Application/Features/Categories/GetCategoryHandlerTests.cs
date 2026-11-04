@@ -27,7 +27,8 @@ public class GetCategoryHandlerTests
         var response = await _handler.HandleAsync(
             new GetCategoryQuery(Owner.Value, _category.Id.Value), TestContext.Current.CancellationToken);
 
-        Assert.Equal(new CategoryResponse(_category.Id.Value, "Salary", TransactionType.Income, false), response);
+        Assert.Equal(
+            new CategoryResponse(_category.Id.Value, "Salary", TransactionType.Income, false, false), response);
     }
 
     [Fact]

@@ -77,6 +77,9 @@ namespace Transactions.Infrastructure.Persistence.Migrations
                     b.Property<bool>("IsArchived")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -91,6 +94,10 @@ namespace Transactions.Infrastructure.Persistence.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId", "Type")
+                        .IsUnique()
+                        .HasFilter("[IsDefault] = 1");
 
                     b.HasIndex("UserId", "Type", "Name")
                         .IsUnique();

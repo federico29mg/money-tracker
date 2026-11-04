@@ -10,6 +10,7 @@ using Transactions.Application.Features.Categories.CreateCategory;
 using Transactions.Application.Features.Categories.GetCategories;
 using Transactions.Application.Features.Categories.GetCategory;
 using Transactions.Application.Features.Categories.RenameCategory;
+using Transactions.Application.Features.Provisioning.ProvisionUser;
 using Transactions.Application.Features.Transactions.GetTransaction;
 using Transactions.Application.Features.Transactions.GetTransactions;
 using Transactions.Application.Features.Transactions.RecordTransaction;
@@ -45,6 +46,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<GetTransferHandler>();
         services.AddScoped<GetTransfersHandler>();
         services.AddScoped<PayCreditCardHandler>();
+        services.AddScoped<ProvisionUserHandler>();
 
         return services;
     }

@@ -32,5 +32,10 @@ internal sealed class CategoryConfiguration : IEntityTypeConfiguration<Category>
         // The database's default collation is case-insensitive, so "Gym" and "gym" clash here too.
         builder.HasIndex(category => new { category.UserId, category.Type, category.Name })
             .IsUnique();
+
+        // At most one default per user and type, even if two provisioning messages arrive at the same time.
+        builder.HasIndex(category => new { category.UserId, category.Type })
+            .IsUnique()
+            .HasFilter("[IsDefault] = 1");
     }
 }

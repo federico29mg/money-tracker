@@ -43,5 +43,9 @@ public sealed class InMemoryCategoryRepository : ICategoryRepository
             && category.Id != excludingId
             && string.Equals(category.Name, name, StringComparison.OrdinalIgnoreCase)));
 
+    public Task<Category?> GetDefaultAsync(UserId userId, TransactionType type, CancellationToken cancellationToken) =>
+        Task.FromResult(_categories.Values.FirstOrDefault(category =>
+            category.UserId == userId && category.Type == type && category.IsDefault));
+
     public void Add(Category category) => _categories.Add(category.Id, category);
 }
