@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest"/>
+    <!-- The emulator gets the same topics and subscriptions as in Docker Compose. -->
+    <None Include="..\..\docker\servicebus-emulator\Config.json" Link="servicebus-emulator\Config.json"
+          CopyToOutputDirectory="PreserveNewest"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing"/>
+    <PackageReference Include="Testcontainers.MsSql"/>
+    <PackageReference Include="Testcontainers.ServiceBus"/>
+    <PackageReference Include="xunit.v3.mtp-v2"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Services\Transactions\Transactions.Api\Transactions.Api.csproj"/>
+  </ItemGroup>
+
+</Project>

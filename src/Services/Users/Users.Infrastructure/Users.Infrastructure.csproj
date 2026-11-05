@@ -4,6 +4,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="Users.IntegrationTests"/>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Users.Application\Users.Application.csproj"/>
   </ItemGroup>
 

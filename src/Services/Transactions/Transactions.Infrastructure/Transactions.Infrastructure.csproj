@@ -1,6 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <InternalsVisibleTo Include="Transactions.IntegrationTests"/>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Transactions.Application\Transactions.Application.csproj"/>
   </ItemGroup>
 
